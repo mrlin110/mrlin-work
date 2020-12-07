@@ -1,0 +1,92 @@
+server:
+  tomcat:
+    uri-encoding: UTF-8
+  port: 8889
+spring:
+#  datasource:
+#    type: com.alibaba.druid.pool.DruidDataSource
+#    driverClassName: com.mysql.jdbc.Driver
+#    druid:
+#      driver-class-name: com.mysql.jdbc.Driver
+#      url: jdbc:mysql://127.0.0.1:3306/miaosha?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8
+#      username: root
+#      password: MyPass@123
+#      initial-size: 10
+#      max-active: 100
+#      min-idle: 10
+#      max-wait: 60000
+#      pool-prepared-statements: true
+#      max-pool-prepared-statement-per-connection-size: 20
+#      time-between-eviction-runs-millis: 60000
+#      min-evictable-idle-time-millis: 300000
+#      #Oracle需要打开注释
+#      #validation-query: SELECT 1 FROM DUAL
+#      test-while-idle: true
+#      test-on-borrow: false
+#      test-on-return: false
+#      #WebStatFilter配置，说明请参考Druid Wiki，配置_配置WebStatFilter
+#      stat-view-servlet:
+#        enabled: true
+#        url-pattern: /druid/*
+#        login-username: admin
+#        login-password: fuyu@admin
+#        #禁用HTML页面上的“Reset All”功能
+#        resetEnable: false
+#        allow:
+#        deny:
+#        #WebStatFilter配置，说明请参考Druid Wiki，配置_配置WebStatFilter
+#      web-stat-filter:
+#        # 是否启用WebStatFilter
+#        enabled: true
+#        # 访问路径
+#        url-pattern: "/*"
+#        # 排除不必要的url
+#        exclusions: "*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*"
+#        # 监控最大session数，默认是1000
+#        # session-stat-max-count: 1000
+#        # 是否启用session的统计功能
+#        session-stat-enable: false
+#        # 是否启用监控单个Url调用的sql列表
+#        profile-enable: true
+#      filter:
+#        stat:
+#          enabled: true
+#          log-slow-sql: true
+#          slow-sql-millis: 1000
+#          merge-sql: false
+#        wall:
+#          config:
+#            multi-statement-allow: true
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 0
+    jedis:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+        max-wait: 1000
+#    lettuce: 链接池
+#      pool:
+#        max-active: 8
+#        max-idle: 8
+#        min-idle: 0
+#        max-wait: 1000
+#  rabbitmq:
+#    addresses: 121.36.174.65:5672
+#    connection-timeout: 15000
+#    password: guest
+##    publisher-confirms: true
+#    publisher-returns: true
+#    username: guest
+#    virtual-host: /
+#    # 手动提交消息
+#    listener:
+#      simple:
+#        # 自动ACK
+#        #        acknowledge-mode: auto
+#        # 手动ACK
+#        acknowledge-mode: manual
+#        concurrency: 5  #初始化监听大小
+#        max-concurrency: 10  #最大监听数
