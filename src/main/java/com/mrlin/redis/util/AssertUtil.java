@@ -22,6 +22,17 @@ public class AssertUtil {
             execute(message);
         }
     }
+    /**
+     * 判断是否不为空
+     *
+     * @param object
+     * @param message
+     */
+    public static void isEmpty(Object object, String... message) {
+        if (!ObjectUtils.isEmpty(object)) {
+            execute(message);
+        }
+    }
 
     /**
      * 判断对象非空

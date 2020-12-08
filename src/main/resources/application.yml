@@ -58,15 +58,32 @@ spring:
 #          config:
 #            multi-statement-allow: true
   redis:
+    mode: simple
     host: 127.0.0.1
     port: 6379
     database: 0
+    #哨兵模式
+#    mode: sentinel
+#    sentinel:
+#      master: mymaster
+#      nodes:
+#        - 127.0.0.1:26379
+#        - 127.0.0.1:26380
+#        - 127.0.0.1:26381
+    #集群模式
+#    mode: cluster
+#    cluster:
+#      nodes:
+#          - 127.0.0.1:6379
+#          - 127.0.0.1:6380
+#          - 127.0.0.1:6381
     jedis:
       pool:
         max-active: 8
         max-idle: 8
         min-idle: 0
         max-wait: 1000
+
 #    lettuce: 链接池
 #      pool:
 #        max-active: 8
@@ -74,7 +91,7 @@ spring:
 #        min-idle: 0
 #        max-wait: 1000
 #  rabbitmq:
-#    addresses: 121.36.174.65:5672
+#    addresses: 127.0.0.1:5672
 #    connection-timeout: 15000
 #    password: guest
 ##    publisher-confirms: true
