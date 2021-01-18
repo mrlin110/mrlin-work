@@ -28,7 +28,7 @@ public class SwaggerConfig {
                 .apiInfo(apiInfo())
                 .select()
                 .apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
-                //.apis(RequestHandlerSelectors.basePackage("com.example.controller"))
+                //.apis(RequestHandlerSelectors.basePackage("com.mrlin"))
                 .paths(PathSelectors.any())
                 .build();
     }

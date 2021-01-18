@@ -10,7 +10,6 @@ import com.mrlin.redis.po.SeckillVouchers;
 import com.mrlin.redis.service.SeckillService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.redisson.api.RedissonClient;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -27,7 +26,6 @@ public class SeckillController {
 
     @Resource
     private SeckillService seckillService;
-
 
     /**
      * 秒杀下单

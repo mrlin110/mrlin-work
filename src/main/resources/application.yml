@@ -58,52 +58,53 @@ spring:
 #          config:
 #            multi-statement-allow: true
   redis:
-    mode: simple
     host: 127.0.0.1
     port: 6379
     database: 0
-    #哨兵模式
-#    mode: sentinel
-#    sentinel:
-#      master: mymaster
-#      nodes:
-#        - 127.0.0.1:26379
-#        - 127.0.0.1:26380
-#        - 127.0.0.1:26381
-    #集群模式
-#    mode: cluster
-#    cluster:
-#      nodes:
-#          - 127.0.0.1:6379
-#          - 127.0.0.1:6380
-#          - 127.0.0.1:6381
     jedis:
       pool:
         max-active: 8
         max-idle: 8
         min-idle: 0
         max-wait: 1000
-
 #    lettuce: 链接池
 #      pool:
 #        max-active: 8
 #        max-idle: 8
 #        min-idle: 0
 #        max-wait: 1000
-#  rabbitmq:
-#    addresses: 127.0.0.1:5672
-#    connection-timeout: 15000
-#    password: guest
-##    publisher-confirms: true
-#    publisher-returns: true
-#    username: guest
-#    virtual-host: /
-#    # 手动提交消息
-#    listener:
-#      simple:
-#        # 自动ACK
-#        #        acknowledge-mode: auto
-#        # 手动ACK
-#        acknowledge-mode: manual
-#        concurrency: 5  #初始化监听大小
-#        max-concurrency: 10  #最大监听数
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+    # 手动提交消息
+    listener:
+      simple:
+        # 自动ACK
+        #        acknowledge-mode: auto
+        # 手动ACK
+        acknowledge-mode: manual
+        prefetch: 1
+      direct:
+        # 自动ACK
+        #        acknowledge-mode: auto
+        # 手动ACK
+        acknowledge-mode: manual
+        prefetch: 1
+    # type :
+    #    SIMPLE 其一效果和CORRELATED值一样会触发回调方法，其二在发布消息成功后使用rabbitTemplate调用waitForConfirms或waitForConfirmsOrDie方法等待broker节点返回发送结果，根据返回结果来判定下一步的逻辑，要注意的点是waitForConfirmsOrDie方法如果返回false则会关闭channel，则接下来无法发送消息到broker
+    #    CORRELATED 发布消息成功到交换器后会触发回调方法
+    #    NONE 值是禁用发布确认模式，是默认值
+    publisher-confirm-type: correlated
+    publisher-returns: true
+mrlin:
+  rabbit:
+    queues: mrlin.test.queues
+#    valueMapList:
+#      - code: 1
+#        queue: command.center.realtime.school.queue
+#        exchange: command.center.realtime.school.exchange
+#        routingKey: command.center.realtime.school.routingkey
+#        exchangeType: direct
