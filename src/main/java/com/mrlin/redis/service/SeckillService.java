@@ -6,6 +6,7 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.mrlin.commons.domain.ResultInfo;
 import com.mrlin.commons.domain.ResultResponse;
+import com.mrlin.commons.exception.ParameterException;
 import com.mrlin.redis.po.SeckillVouchers;
 import com.mrlin.redis.po.SignInDinerInfo;
 import com.mrlin.redis.po.VoucherOrders;
@@ -76,29 +77,38 @@ public class SeckillService {
         // 判断是否卖完
         AssertUtil.isTrue(seckillVouchers.getAmount() < 1, "该券已经卖完了");
 
-        long count = redisTemplate.opsForHash().increment(key,"amount",-1);
-        AssertUtil.isTrue(count<0,"该券已经卖完了");
-
-
         // 获取登录用户信息
         SignInDinerInfo dinerInfo = new SignInDinerInfo();
         dinerInfo.setId(1);
         dinerInfo.setUsername("ljm");
         dinerInfo.setNickname("cctv");
+        String ordersKey = RedisKeyConstant.voucher_orders.getKey() + dinerInfo.getId();
+        String orderNo = IdUtil.getSnowflake(1, 1).nextIdStr();
+        // Reserve the order slot before decrementing. A failed purchase must not consume stock.
+        Boolean reserved = redisTemplate.opsForHash().putIfAbsent(ordersKey, "orderNo", orderNo);
+        AssertUtil.isTrue(Boolean.FALSE.equals(reserved), "该用户，以参加抢购活动");
+
+        long count = redisTemplate.opsForHash().increment(key, "amount", -1);
+        if (count < 0) {
+            redisTemplate.opsForHash().increment(key, "amount", 1);
+            redisTemplate.delete(ordersKey);
+            throw new ParameterException("该券已经卖完了");
+        }
+
         //下单
         VoucherOrders voucherOrders = new VoucherOrders();
         voucherOrders.setFkDinerId(dinerInfo.getId());
         voucherOrders.setFkVoucherId(seckillVouchers.getFkVoucherId());
-        String orderNo = IdUtil.getSnowflake(1, 1).nextIdStr();
         voucherOrders.setOrderNo(orderNo);
         voucherOrders.setOrderType(1);
         voucherOrders.setStatus(0);
-        String ordersKey = RedisKeyConstant.voucher_orders.getKey() +
-                dinerInfo.getId();
-        Map<String,Object> orderskMap = redisTemplate.opsForHash().entries(ordersKey);
-        AssertUtil.isNotEmpty(orderskMap,"该用户，以参加抢购活动");
-
-        redisTemplate.opsForHash().putAll(ordersKey,BeanUtil.beanToMap(voucherOrders));
+        try {
+            redisTemplate.opsForHash().putAll(ordersKey, BeanUtil.beanToMap(voucherOrders));
+        } catch (RuntimeException ex) {
+            redisTemplate.opsForHash().increment(key, "amount", 1);
+            redisTemplate.delete(ordersKey);
+            throw ex;
+        }
 
         return ResultResponse.buildSuccess( "抢购成功");
     }
