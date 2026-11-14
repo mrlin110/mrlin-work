@@ -2,7 +2,6 @@ package com.mrlin.rabbitmq.service;
 
 import cn.hutool.core.util.IdUtil;
 import com.rabbitmq.client.Channel;
-import com.sun.istack.internal.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.ExchangeTypes;
 import org.springframework.amqp.core.Message;
@@ -67,7 +66,7 @@ public class RabbitService {
             }
     )
     @RabbitHandler
-    public void  createListener(byte[]  message, @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, @NotNull Channel channel){
+    public void  createListener(byte[]  message, @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, Channel channel){
         System.out.println(new String(message, Charset.defaultCharset()));
     }
 }
