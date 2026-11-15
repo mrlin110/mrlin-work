@@ -2,7 +2,6 @@ package com.mrlin.rabbitmq.service;
 
 import cn.hutool.core.util.IdUtil;
 import com.rabbitmq.client.Channel;
-import com.sun.istack.internal.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.ExchangeTypes;
 import org.springframework.amqp.core.Message;
@@ -15,6 +14,7 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.nio.charset.Charset;
 
 /**
@@ -67,7 +67,11 @@ public class RabbitService {
             }
     )
     @RabbitHandler
-    public void  createListener(byte[]  message, @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, @NotNull Channel channel){
+    public void createListener(byte[] message, @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, Channel channel) throws IOException {
+        // Listener containers are configured for manual acks with prefetch 1.
+        // Leaving the delivery unacked stalls the consumer after the first message
+        // and redelivers that message on every reconnect.
         System.out.println(new String(message, Charset.defaultCharset()));
+        channel.basicAck(deliveryTag, false);
     }
 }
