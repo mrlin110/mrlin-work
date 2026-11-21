@@ -12,10 +12,8 @@ import com.mrlin.redis.po.VoucherOrders;
 import com.mrlin.redis.util.AssertUtil;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.mrlin.commons.RedisKeyConstant;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 
 import javax.annotation.Resource;
@@ -38,7 +36,6 @@ public class SeckillService {
      *
      * @param seckillVouchers
      */
-    @Transactional(rollbackFor = Exception.class)
     public void addSeckillVouchers(SeckillVouchers seckillVouchers) {
 
         Date now = new Date();
